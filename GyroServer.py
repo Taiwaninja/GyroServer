@@ -15,16 +15,38 @@ def main():
 
     plt.axis([0, 80, -5, 5])
     plt.ion()
-    last_scat = None
+    should_clear_scats = False
+    last_x_scat = None
+    last_y_scat = None
+    last_z_scat = None
+
     print "Listening"
     while True:
 
         i += 1
         # TODO: Remove non relevant results
-        if last_scat:
-            last_scat.remove()
-        last_scat = plt.scatter(range(len(results[-80:])), [result.x for result in results[-80:]])
+        if should_clear_scats:
+            should_clear_scats = False
+            last_x_scat.remove()
+            last_y_scat.remove()
+            last_z_scat.remove()
+        display_results = results[-80:]
+        
+        last_x_scat = plt.scatter(
+                            range(len(display_results)),
+                            [result.x for result in display_results],
+                            c='b')
+        last_y_scat = plt.scatter(
+                            range(len(display_results)),
+                            [result.y for result in display_results],
+                            c='g')
+        last_z_scat = plt.scatter(
+                            range(len(display_results)),
+                            [result.z for result in display_results],
+                            c='y')
         plt.pause(0.001)
+        if last_x_scat or last_y_scat or last_z_scat:
+            should_clear_scats = True
 
 
 def listeing_function(results):
