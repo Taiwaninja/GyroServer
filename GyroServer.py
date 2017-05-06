@@ -35,15 +35,18 @@ def main():
         last_x_scat = plt.scatter(
                             range(len(display_results)),
                             [result.x for result in display_results],
-                            c='b')
+                            c='b',
+                            label="x")
         last_y_scat = plt.scatter(
                             range(len(display_results)),
                             [result.y for result in display_results],
-                            c='g')
+                            c='g',
+                            label="y")
         last_z_scat = plt.scatter(
                             range(len(display_results)),
                             [result.z for result in display_results],
-                            c='y')
+                            c='y',
+                            label="z")
         plt.pause(0.001)
         if last_x_scat or last_y_scat or last_z_scat:
             should_clear_scats = True
