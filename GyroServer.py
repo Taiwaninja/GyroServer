@@ -1,46 +1,40 @@
+import Consts
 import socket
-import struct
-import GyroInformation
-import time
-import matplotlib.pyplot as plt
-import threading
-import traceback
+import ParsingUtils
+import MovementState
 
 
-def main():
-    results = []
-    gui_thread = threading.Thread(target=listeing_function, args=(results,))
-    gui_thread.start()
-    i = 0
+class GyroServer(object):
+    """
+    A server that listens to reports about movement.
 
-    plt.axis([0, 80, -5, 5])
-    plt.ion()
-    last_scat = None
-    print "Listening"
-    while True:
+    Calls given callbacks upon changing directions.
+    callback is formated (old_state,new_state)
+    """
 
-        i += 1
-        # TODO: Remove non relevant results
-        if last_scat:
-            last_scat.remove()
-        last_scat = plt.scatter(range(len(results[-80:])), [result.x for result in results[-80:]])
-        plt.pause(0.001)
+    def __init__(self, change_movement_callback, port=Consts.PORT, velocity_threshold=Consts.VELOCITY_THRESHOLD):
+        self.change_movement_callback = change_movement_callback
+        self.port = port
+        self.socket = None
+        self.current_state = MovementState.MovementState.Still
+        self.velocity_threshold = velocity_threshold
+        self.is_running = False
 
+    def start(self):
+        """
+        Starts the server, This function is blocking.
+        """
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket.bind((Consts.LISTEN_ADDRESS, Consts.PORT))
+        self.is_running = True
+        while self.is_running:
+            pack = self.socket.recv(Consts.MAX_PACKET_SIZE)
+            location_movement_info = ParsingUtils.ParsingUtils.parse_velocity_packet(pack)
+            new_state = self.get_current_movement_state(location_movement_info)
+            if not new_state == self.current_state:
+                self.change_movement_callback(self.current_state, new_state)
+                self.current_state = new_state
 
-def listeing_function(results):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind(("0.0.0.0", 15170))
-    while True:
-        pack = sock.recv(10000)
-        location_info = parse_packet(pack)
-        print "(%s: %s,%s,%s)" % (time.ctime(), location_info.z, location_info.y, location_info.z)
-        results.append(location_info)
-
-
-def parse_packet(packet):
-    (x, y, z) = struct.unpack("!fff", packet)
-    return GyroInformation.GyroInformation(x, y, z)
-
-
-if __name__ == "__main__":
-    main()
+    def get_current_movement_state(self, gyro_with_speed_info):
+        # TODO: Implement
+        return MovementState.MovementState.Still
