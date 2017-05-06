@@ -13,5 +13,9 @@ class KeyManager(object):
             cls.run_script(Consts.PRESS_LEFT_PATH)
 
     @classmethod
+    def handle_jump(cls):
+        cls.run_script(Consts.JUMP_PATH)
+
+    @classmethod
     def run_script(cls, script_path):
         subprocess.call([Consts.AHK_PATH, script_path])

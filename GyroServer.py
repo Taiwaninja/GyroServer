@@ -12,8 +12,11 @@ class GyroServer(object):
     callback is formated (old_state,new_state)
     """
 
-    def __init__(self, change_movement_callback, port=Consts.PORT, velocity_threshold=Consts.VELOCITY_THRESHOLD):
+    # TODO: Consider changing jump to stateful aswell.
+    def __init__(self, change_movement_callback, jump_callback, port=Consts.PORT,
+                 velocity_threshold=Consts.VELOCITY_THRESHOLD):
         self.change_movement_callback = change_movement_callback
+        self.jump_callback = jump_callback
         self.port = port
         self.socket = None
         self.current_state = MOVEMENT_STATE.STILL
@@ -30,10 +33,23 @@ class GyroServer(object):
         while self.is_running:
             pack = self.socket.recv(Consts.MAX_PACKET_SIZE)
             location_movement_info = ParsingUtils.ParsingUtils.parse_velocity_packet(pack)
-            new_state = self.get_current_movement_state(location_movement_info)
-            if not new_state == self.current_state:
-                self.change_movement_callback(self.current_state, new_state)
-                self.current_state = new_state
+            self.handle_horizontal(location_movement_info)
+
+
+    def handle_horizontal(self, location_movement_info):
+        new_state = self.get_current_movement_state(location_movement_info)
+        if not new_state == self.current_state:
+            self.change_movement_callback(self.current_state, new_state)
+            self.current_state = new_state
+
+    def handle_jump(self, gyro_with_speed_info):
+        if self.is_jumping(gyro_with_speed_info):
+            self.jump_callback()
+
+    def is_jumping(self, gyro_with_speed_info):
+        if gyro_with_speed_info.speed_z >= Consts.JUMP_THRESHOLD:
+            return True
+
 
     def get_current_movement_state(self, gyro_with_speed_info):
         # TODO: We might need to reverse this!
