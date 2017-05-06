@@ -34,7 +34,7 @@ class GyroServer(object):
             pack = self.socket.recv(Consts.MAX_PACKET_SIZE)
             location_movement_info = ParsingUtils.ParsingUtils.parse_velocity_packet(pack)
             self.handle_horizontal(location_movement_info)
-
+            self.handle_up_axis(location_movement_info         )
 
     def handle_horizontal(self, location_movement_info):
         new_state = self.get_current_movement_state(location_movement_info)
@@ -42,7 +42,7 @@ class GyroServer(object):
             self.change_movement_callback(self.current_state, new_state)
             self.current_state = new_state
 
-    def handle_jump(self, gyro_with_speed_info):
+    def handle_up_axis(self, gyro_with_speed_info):
         if self.is_jumping(gyro_with_speed_info):
             self.jump_callback()
 
