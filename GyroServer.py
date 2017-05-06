@@ -1,7 +1,7 @@
 import Consts
 import socket
 import ParsingUtils
-import MovementState
+from Consts import MOVEMENT_STATE
 
 
 class GyroServer(object):
@@ -16,7 +16,7 @@ class GyroServer(object):
         self.change_movement_callback = change_movement_callback
         self.port = port
         self.socket = None
-        self.current_state = MovementState.MovementState.Still
+        self.current_state = MOVEMENT_STATE.STILL
         self.velocity_threshold = velocity_threshold
         self.is_running = False
 
@@ -36,5 +36,9 @@ class GyroServer(object):
                 self.current_state = new_state
 
     def get_current_movement_state(self, gyro_with_speed_info):
-        # TODO: Implement
-        return MovementState.MovementState.Still
+        # TODO: We might need to reverse this!
+        if gyro_with_speed_info.speed_x >= Consts.VELOCITY_THRESHOLD:
+            return MOVEMENT_STATE.RIGHT
+        if gyro_with_speed_info.speed_x <= -1 * Consts.VELOCITY_THRESHOLD:
+            return MOVEMENT_STATE.LEFT
+        return MOVEMENT_STATE.STILL
