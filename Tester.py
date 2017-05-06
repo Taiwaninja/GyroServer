@@ -1,3 +1,5 @@
+import os
+import subprocess
 import socket
 import Consts
 import struct
@@ -7,6 +9,12 @@ LEFT_PACKET = struct.pack("!ffffff", 0, 0, 0, -1, 0, 0)
 RIGHT_PACKET = struct.pack("!ffffff", 0, 0, 0, 1, 0, 0)
 STILL_PACKET = struct.pack("!ffffff", 0, 0, 0, 0, 0, 0)
 STILL2_PACKET = struct.pack("!ffffff", 0, 0, 0, 0.01, 0, 0)
+
+
+def test_call_process():
+    path=os.path.join(os.getcwd(), r"..\icy_ahk\right.ahk")
+    print path
+    subprocess.call(path)
 
 
 def main():
@@ -30,4 +38,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    test_call_process()

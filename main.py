@@ -1,5 +1,6 @@
 import GyroServer
 import time
+import KeyManager
 
 
 def printing_move_change_callback(old_move, new_move):
@@ -7,7 +8,7 @@ def printing_move_change_callback(old_move, new_move):
 
 
 def main():
-    server = GyroServer.GyroServer(printing_move_change_callback)
+    server = GyroServer.GyroServer(KeyManager.KeyManager.handle_callback)
     server.start()
 
 
