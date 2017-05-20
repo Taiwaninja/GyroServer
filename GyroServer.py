@@ -1,7 +1,7 @@
 import Consts
 import socket
 import ParsingUtils
-from Consts import MOVEMENT_STATE
+from Consts import MOVEMENT_STATE, X_INVERSION
 
 
 class GyroServer(object):
@@ -34,27 +34,41 @@ class GyroServer(object):
             pack = self.socket.recv(Consts.MAX_PACKET_SIZE)
             location_movement_info = ParsingUtils.ParsingUtils.parse_velocity_packet(pack)
             self.handle_horizontal(location_movement_info)
-            self.handle_up_axis(location_movement_info         )
+            self.handle_up_axis(location_movement_info)
 
     def handle_horizontal(self, location_movement_info):
         new_state = self.get_current_movement_state(location_movement_info)
         if not new_state == self.current_state:
-            self.change_movement_callback(self.current_state, new_state)
+            self.change_movement_callback(self.current_state, new_state, location_movement_info.speed_x)
             self.current_state = new_state
 
     def handle_up_axis(self, gyro_with_speed_info):
         if self.is_jumping(gyro_with_speed_info):
-            self.jump_callback()
+            self.jump_callback(gyro_with_speed_info.speed_z)
 
     def is_jumping(self, gyro_with_speed_info):
         if gyro_with_speed_info.speed_z >= Consts.JUMP_THRESHOLD:
             return True
 
-
     def get_current_movement_state(self, gyro_with_speed_info):
         # TODO: We might need to reverse this!
         if gyro_with_speed_info.speed_x >= Consts.VELOCITY_THRESHOLD:
-            return MOVEMENT_STATE.RIGHT
+            return self.get_movement_state_with_inversion(MOVEMENT_STATE.RIGHT)
         if gyro_with_speed_info.speed_x <= -1 * Consts.VELOCITY_THRESHOLD:
-            return MOVEMENT_STATE.LEFT
+            return self.get_movement_state_with_inversion(MOVEMENT_STATE.LEFT)
         return MOVEMENT_STATE.STILL
+        
+    def get_movement_state_with_inversion(self, movement_state):
+        if not X_INVERSION:
+            if movement_state == MOVEMENT_STATE.RIGHT:
+                return MOVEMENT_STATE.RIGHT
+            if movement_state == MOVEMENT_STATE.LEFT:
+                return MOVEMENT_STATE.LEFT
+        else:
+            if movement_state == MOVEMENT_STATE.RIGHT:
+                return MOVEMENT_STATE.LEFT
+            if movement_state == MOVEMENT_STATE.LEFT:
+                return MOVEMENT_STATE.RIGHT
+        return MOVEMENT_STATE.STILL
+
+
