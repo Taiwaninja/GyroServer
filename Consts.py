@@ -12,11 +12,14 @@ PORT = 15170
 LISTEN_ADDRESS = "0.0.0.0"
 MAX_PACKET_SIZE = 6 * 4
 
-JUMP_THRESHOLD = 0.5
-VELOCITY_THRESHOLD = 0.1
+JUMP_THRESHOLD = 75
+VELOCITY_THRESHOLD = 15
 
 # Usage: Movement_State.LEFT
 MOVEMENT_STATE = Bunch.fromDict({"LEFT": "Left", "STILL": "Still", "RIGHT": "Right"})
+
+# Switch left and right
+X_INVERSION = True
 
 AHK_PATH = "C:\Program Files\AutoHotkey\AutoHotkey.exe"
 RESET_PROFILE_PATH = os.path.join(os.getcwd(), r"..\icy_ahk\reset_profile.ahk")
