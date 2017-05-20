@@ -26,6 +26,7 @@ def print_then_jump(value=None):
 
 
 def main():
+    KeyManager.KeyManager.init()
     # server = GyroServer.GyroServer(KeyManager.KeyManager.handle_callback)
     server = GyroServer.GyroServer(print_then_move, print_then_jump)
     server.start()

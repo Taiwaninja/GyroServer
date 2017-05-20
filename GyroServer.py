@@ -1,7 +1,7 @@
 import Consts
 import socket
 import ParsingUtils
-from Consts import MOVEMENT_STATE, X_INVERSION
+from Consts import MOVEMENT_STATE, X_INVERSION, PACKET_TYPE
 
 
 class GyroServer(object):
@@ -32,9 +32,13 @@ class GyroServer(object):
         self.is_running = True
         while self.is_running:
             pack = self.socket.recv(Consts.MAX_PACKET_SIZE)
-            location_movement_info = ParsingUtils.ParsingUtils.parse_velocity_packet(pack)
-            self.handle_horizontal(location_movement_info)
-            self.handle_up_axis(location_movement_info)
+            packet_type, packet_data = ParsingUtils.ParsingUtils.parse_packet(pack)
+            if packet_type == PACKET_TYPE.COMMAND:
+                self.handle_command(packet_data)
+            else:
+                location_movement_info = packet_data
+                self.handle_horizontal(location_movement_info)
+                self.handle_up_axis(location_movement_info)
 
     def handle_horizontal(self, location_movement_info):
         new_state = self.get_current_movement_state(location_movement_info)
@@ -70,5 +74,9 @@ class GyroServer(object):
             if movement_state == MOVEMENT_STATE.LEFT:
                 return MOVEMENT_STATE.RIGHT
         return MOVEMENT_STATE.STILL
+
+    def handle_command(self, command):
+        print(command)
+
 
 
