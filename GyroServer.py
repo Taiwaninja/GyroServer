@@ -1,6 +1,7 @@
 import Consts
 import socket
 import ParsingUtils
+import threading
 from Consts import MOVEMENT_STATE, X_INVERSION, PACKET_TYPE
 
 
@@ -22,16 +23,29 @@ class GyroServer(object):
         self.current_state = MOVEMENT_STATE.STILL
         self.velocity_threshold = velocity_threshold
         self.is_running = False
+        self.running_thread = None
 
     def start(self):
         """
         Starts the server, This function is blocking.
         """
+        self.running_thread = threading.Thread(target=self.start_game_thread)
+        self.running_thread.start()
+
+
+    def start_game_thread(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.bind((Consts.LISTEN_ADDRESS, Consts.PORT))
+        # TODO: Value to consts
+        self.socket.settimeout(3)
         self.is_running = True
+
         while self.is_running:
-            pack = self.socket.recv(Consts.MAX_PACKET_SIZE)
+            try:
+                pack = self.socket.recv(Consts.MAX_PACKET_SIZE)
+            except socket.error:
+                continue
+
             packet_type, packet_data = ParsingUtils.ParsingUtils.parse_packet(pack)
             if packet_type == PACKET_TYPE.COMMAND:
                 self.handle_command(packet_data)
@@ -53,6 +67,12 @@ class GyroServer(object):
     def is_jumping(self, gyro_with_speed_info):
         if gyro_with_speed_info.speed_z >= Consts.JUMP_THRESHOLD:
             return True
+
+    def stop(self):
+        self.is_running = False
+        self.running_thread.join()
+        self.change_movement_callback(self.current_state, MOVEMENT_STATE.STILL)
+        self.socket.close()
 
     def get_current_movement_state(self, gyro_with_speed_info):
         # TODO: We might need to reverse this!
