@@ -25,6 +25,9 @@ class EndGameDetector(object):
         args = Consts.END_GAME_DETECTOR_COMMAND + [image]
         return subprocess.Popen(args)
 
+    def show_score(self):
+        subprocess.call(Consts.SCORE_EXTRACTOR_COMMAND)
+
 
 if __name__ == "__main__":
     detector = EndGameDetector()

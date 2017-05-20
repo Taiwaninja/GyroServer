@@ -1,6 +1,8 @@
 import GyroServer
 import time
 import KeyManager
+import EndGameDetector
+import Consts
 
 
 def printing_move_change_callback(old_move, new_move):
@@ -19,9 +21,22 @@ def print_then_jump():
 
 def main():
     # server = GyroServer.GyroServer(KeyManager.KeyManager.handle_callback)
-    server = GyroServer.GyroServer(print_then_move, print_then_jump)
-    server.start()
+    while True:
+        # Start game
+        server = GyroServer.GyroServer(print_then_move, print_then_jump)
+        server.start()
 
+        # SLeep untill game over
+        detector = EndGameDetector.EndGameDetector()
+        detector.detect_game_over()
+        print "Game Over"
+
+        server.stop()
+        # Showing score
+        detector.show_score()
+
+        # Reset profile
+        KeyManager.KeyManager.run_script(Consts.RESET_PROFILE_PATH)
 
 if __name__ == "__main__":
     main()
