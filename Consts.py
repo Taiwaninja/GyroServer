@@ -16,3 +16,8 @@ PRESS_RIGHT_PATH = os.path.join(os.getcwd(), r"..\icy_ahk\right.ahk")
 PRESS_LEFT_PATH = os.path.join(os.getcwd(), r"..\icy_ahk\left.ahk")
 RELEASE_PATH = os.path.join(os.getcwd(), r"..\icy_ahk\release.ahk")
 JUMP_PATH = os.path.join(os.getcwd(), r"..\icy_ahk\up.ahk")
+
+MODE_REGOCNITION_JAR_PATH = "C:\Users\Crispy\PycharmProjects\icy_tower\GyroServer\mode_recognition.jar"
+JAVA_PATH = r"C:\Program Files (x86)\Java\jre1.8.0_131\bin\java.exe"
+END_GAME_DETECTOR_COMMAND = [JAVA_PATH, "-jar", MODE_REGOCNITION_JAR_PATH]
+IMAGE_LIST = ["high_score.jpg", "game_over.jpg"]
