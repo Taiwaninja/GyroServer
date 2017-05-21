@@ -14,10 +14,11 @@ class GyroServer(object):
     """
 
     # TODO: Consider changing jump to stateful aswell.
-    def __init__(self, change_movement_callback, jump_callback, port=Consts.PORT,
+    def __init__(self, change_movement_callback, jump_callback, start_callback, port=Consts.PORT,
                  velocity_threshold=Consts.VELOCITY_THRESHOLD):
         self.change_movement_callback = change_movement_callback
         self.jump_callback = jump_callback
+        self.start_callback = start_callback
         self.port = port
         self.socket = None
         self.current_state = MOVEMENT_STATE.STILL
@@ -96,7 +97,11 @@ class GyroServer(object):
         return MOVEMENT_STATE.STILL
 
     def handle_command(self, command):
-        print(command)
+        if command == 2:
+            self.start_callback()
+            print("Started Game")
+        else:
+            print(command)
 
 
 

@@ -16,12 +16,17 @@ class KeyManager(object):
         cls.is_jump = True
 
     @classmethod
+    def start_game(cls):
+        cls.run_script(Consts.START_GAME_PATH)
+
+    @classmethod
     def handle_callback_script(cls, old_state, new_state):
-        cls.run_script(Consts.RELEASE_PATH)
         if new_state == MOVEMENT_STATE.RIGHT:
             cls.run_script(Consts.PRESS_RIGHT_PATH)
         elif new_state == MOVEMENT_STATE.LEFT:
             cls.run_script(Consts.PRESS_LEFT_PATH)
+        else:
+            cls.run_script(Consts.RELEASE_PATH)
 
     @classmethod
     def handle_jump_script(cls):

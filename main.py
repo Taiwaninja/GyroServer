@@ -27,15 +27,19 @@ def print_then_jump(value=None):
         print "%s Jumped with value %f" % (time.ctime(), value)
 
 
+def start_game():
+    KeyManager.KeyManager.start_game()
+
+
 def main():
     KeyManager.KeyManager.init()
     # server = GyroServer.GyroServer(KeyManager.KeyManager.handle_callback)
     while True:
         # Start game
-        server = GyroServer.GyroServer(print_then_move, print_then_jump)
+        server = GyroServer.GyroServer(print_then_move, print_then_jump, start_game)
         server.start()
 
-        # SLeep untill game over
+        # Sleep untill game over
         detector = EndGameDetector.EndGameDetector()
         detector.detect_game_over()
         print "Game Over"

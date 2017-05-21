@@ -25,6 +25,7 @@ MOVEMENT_STATE = Bunch.fromDict({"LEFT": "Left", "STILL": "Still", "RIGHT": "Rig
 X_INVERSION = True
 
 AHK_PATH = "C:\Program Files\AutoHotkey\AutoHotkey.exe"
+START_GAME_PATH = os.path.join(os.getcwd(), r"..\icy_ahk\start_game.ahk")
 RESET_PROFILE_PATH = os.path.join(os.getcwd(), r"..\icy_ahk\reset_profile.ahk")
 PRESS_RIGHT_PATH = os.path.join(os.getcwd(), r"..\icy_ahk\right.ahk")
 PRESS_LEFT_PATH = os.path.join(os.getcwd(), r"..\icy_ahk\left.ahk")
