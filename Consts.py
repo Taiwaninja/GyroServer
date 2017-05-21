@@ -33,9 +33,9 @@ RELEASE_PATH = os.path.join(os.getcwd(), r"..\icy_ahk\release.ahk")
 JUMP_PATH = os.path.join(os.getcwd(), r"..\icy_ahk\up.ahk")
 
 # END_GAME
-MODE_REGOCNITION_JAR_PATH = r"C:\Users\Crispy\PycharmProjects\icy_tower\GyroServer\mode_recognition.jar"
-JAVA_PATH = r"C:\Program Files (x86)\Java\jre1.8.0_131\bin\java.exe"
-
+MODE_REGOCNITION_JAR_PATH = r"..\runnables\mode_recognition.jar"
+#JAVA_PATH = r"C:\Program Files (x86)\Java\jre1.8.0_131\bin\java.exe"
+JAVA_PATH = "java"
 END_GAME_DETECTOR_COMMAND = [JAVA_PATH, "-jar", MODE_REGOCNITION_JAR_PATH]
 
 IMAGE_LIST = ["high_score.jpg", "game_over.jpg"]
@@ -43,9 +43,9 @@ IMAGE_LIST = ["high_score.jpg", "game_over.jpg"]
 
 # SCORE
 
-SCORE_EXTRACTOR = r"C:\Users\Crispy\PycharmProjects\tower\icy_tower\runnables\extract_score.jar"
+SCORE_EXTRACTOR = r"..\runnables\extract_score.jar"
 ICY_STATS_FILE_PATH = r"C:\\games\\icytower1.5\\profiles\\icy\\icy_stats.txt"
-SCORE_PROPERTIES_FILE = r"C:\Users\Crispy\PycharmProjects\icy_tower\runnables\scores.properties"
+SCORE_PROPERTIES_FILE = r"..\runnables\scores.properties"
 SLEEP_TIME = "15000"
 PROCESS_TO_KILL = "WLXPhotoGallery"
 SCORE_EXTRACTOR_COMMAND = [JAVA_PATH, "-jar", SCORE_EXTRACTOR, ICY_STATS_FILE_PATH, SCORE_PROPERTIES_FILE, SLEEP_TIME,
